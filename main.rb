@@ -1,35 +1,32 @@
-class FiniteStateMachine
-	def initialize(s, l, d, q0, f)
-		@states = s
-		@language = l
-		@transitions = d
-		@start = q0
-		@final_states = f
-	end
-	def process(s)
-		q = @start
-		s.each_char { |c| q = @transitions[q][c]}
-		@final_states.include? q
-	end
-	def union(fsm)
-		
-	end
-	def intersection(fsm)
-	end
-end
+require 'finite_state_machine'
 
-s = [0..3]
-l = %w[a, b]
-q0 = 0
-f = [1, 2]
-d = {
+s1 = Array.new(4) { |i| i }
+l1 = %w[a b]
+q01 = 0
+f1 = [1, 2]
+d1 = {
 		0 => {'a' => 0, 'b' => 1},
 		1 => {'a' => 1, 'b' => 2},
 		2 => {'a' => 2, 'b' => 3},
 		3 => {'a' => 3, 'b' => 3},
 	}
+	
+s2 = Array.new(2) { |i| i }
+l2 = %w[a b]
+q02 = 0
+f2 = [0]
+d2 = {
+		0 => {'a' => 1, 'b' => 0},
+		1 => {'a' => 0, 'b' => 1},
+	}
 
-m = FiniteStateMachine.new s, l, d, q0, f
-str = "abababa"
-outcome = m.process str
+m1 = FiniteStateMachine.new s1, l1, d1, q01, f1
+puts "M1"
+puts m1
+m2 = FiniteStateMachine.new s2, l2, d2, q02, f2
+puts "M2"
+puts m2
+str = "ababaa"
+outcome = m1.process str
 puts "string #{str} accepted: #{outcome}"
+puts m1.union m2
