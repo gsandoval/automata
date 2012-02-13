@@ -1,6 +1,6 @@
 require 'finite_state_machine'
 
-s1 = Array.new(4) { |i| i }
+s1 = Array.new(4) {|i| i}
 l1 = %w[a b]
 q01 = 0
 f1 = [1, 2]
