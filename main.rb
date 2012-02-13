@@ -29,4 +29,7 @@ puts m2
 str = "ababaa"
 outcome = m1.process str
 puts "string #{str} accepted: #{outcome}"
+puts "M1 union M2:"
 puts m1.union m2
+puts "M1 intersect M2:"
+puts m1.intersection m2

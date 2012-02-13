@@ -20,16 +20,18 @@ class FiniteStateMachine
 			ntransitions[qs][c] = [@transitions[qs[0]][c], fsm.transitions[qs[1]][c]]
 		end
 		ninitial_state = [@initial_state, fsm.initial_state]
-		# FIXME this is incorrect since the objective is to generate the fstates for the union not the intersection
-		nfinal_states = @final_states.product fsm.final_states
-		FiniteStateMachine.new nstates, nalphabet, ntransitions, ninitial_state, nfinal_states
+		FiniteStateMachine.new nstates, nalphabet, ntransitions, ninitial_state, nil
 	end
 	def union(fsm)
-		combine(fsm)
+		nfsm = combine(fsm)
+		nfsm.final_states = @final_states.product fsm.states
+		@states.product(fsm.final_states).each {|c| nfsm.final_states.push c}
+		nfsm.final_states.uniq!
+		nfsm
 	end
 	def intersection(fsm)
 		nfsm = combine(fsm)
-		nfsm.final_states.select! {|s| @final_states.include? s[0] && fsm.final_states.include? s[1]}
+		nfsm.final_states = @final_states.product fsm.final_states
 		nfsm
 	end
 	def to_s
