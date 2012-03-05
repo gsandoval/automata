@@ -1,5 +1,6 @@
 class FiniteStateMachine
-	attr_accessor :states, :alphabet, :transitions, :initial_state, :final_states
+	attr_reader :states, :alphabet, :transitions, :initial_state
+	attr_accessor :final_states
 	
 	def initialize(s, l, d, q0, f)
 		@states = s
@@ -31,17 +32,6 @@ class FiniteStateMachine
 		
 		q = add_epsilon_states q
 		q.any? {|s| @final_states.include? s}
-	end
-	
-	def combine(fsm)
-		nstates = @states.product fsm.states
-		nalphabet = (fsm.alphabet + @alphabet).uniq # If they are different all hell breaks loose
-		ntransitions = Hash.new {|hash, key| hash[key] = Hash.new}
-		nstates.product(nalphabet).map do |qs, c|
-			ntransitions[qs][c] = [@transitions[qs[0]][c], fsm.transitions[qs[1]][c]]
-		end
-		ninitial_state = [@initial_state, fsm.initial_state]
-		FiniteStateMachine.new nstates, nalphabet, ntransitions, ninitial_state, nil
 	end
 	
 	def union(fsm)
@@ -97,5 +87,16 @@ class FiniteStateMachine
 			end while size_before < size_after
 		end
 		state_queue
+	end
+	
+	def combine(fsm)
+		nstates = @states.product fsm.states
+		nalphabet = (fsm.alphabet + @alphabet).uniq # If they are different all hell breaks loose
+		ntransitions = Hash.new {|hash, key| hash[key] = Hash.new}
+		nstates.product(nalphabet).map do |qs, c|
+			ntransitions[qs][c] = [@transitions[qs[0]][c], fsm.transitions[qs[1]][c]]
+		end
+		ninitial_state = [@initial_state, fsm.initial_state]
+		FiniteStateMachine.new nstates, nalphabet, ntransitions, ninitial_state, nil
 	end
 end
